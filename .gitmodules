@@ -1,0 +1,3 @@
+[submodule "BinarySerializerLibrary"]
+	path = BinarySerializerLibrary
+	url = https://github.com/DemiEljer/BinarySerializerLibrary
