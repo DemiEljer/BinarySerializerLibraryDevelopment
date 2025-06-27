@@ -1,5 +1,5 @@
 ﻿using BinarySerializerLibrary;
-using BinarySerializerLibrary.Base;
+using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
 using BinarySerializerLibraryTests.Models;
@@ -206,44 +206,89 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void AllDeserializeMethodsTest()
+        public void AllSerializeAndDeserailizeMethodsTest()
         {
             ObjectPropertyModel originModel = new ObjectPropertyModel();
 
-            var serializedData = BinarySerializer.SerializeExceptionShielding(originModel);
+            // Static type
+            {
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionShielding(originModel, eh);
 
-            var deserializedObject = BinarySerializer.DeserializeExceptionShielding<ObjectPropertyModel>(serializedData);
-            originModel.AssetEqual(deserializedObject);
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionShielding<ObjectPropertyModel>(serializedContent, eh));
+                });
 
-            deserializedObject = BinarySerializer.DeserializeExceptionShielding(serializedData, typeof(ObjectPropertyModel)) as ObjectPropertyModel;
-            originModel.AssetEqual(deserializedObject);
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    BinaryArrayBuilder ab = new();
 
-            deserializedObject = BinarySerializer.DeserializeExceptionThrowing<ObjectPropertyModel>(serializedData);
-            originModel.AssetEqual(deserializedObject);
+                    BinarySerializer.SerializeExceptionShielding(ab, originModel, eh);
 
-            deserializedObject = BinarySerializer.DeserializeExceptionThrowing(serializedData, typeof(ObjectPropertyModel)) as ObjectPropertyModel;
-            originModel.AssetEqual(deserializedObject);
+                    BinaryArrayReader ar = new(ab.GetByteArray());
 
-            BinaryArrayReader ar = new BinaryArrayReader(serializedData);
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionShielding<ObjectPropertyModel>(ar, eh));
+                });
 
-            deserializedObject = BinarySerializer.DeserializeExceptionShielding<ObjectPropertyModel>(ar);
-            originModel.AssetEqual(deserializedObject);
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionThrowing(originModel);
 
-            ar.ResetBitIndex();
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionThrowing<ObjectPropertyModel>(serializedContent));
+                });
 
-            deserializedObject = BinarySerializer.DeserializeExceptionShielding(ar, typeof(ObjectPropertyModel)) as ObjectPropertyModel;
-            originModel.AssetEqual(deserializedObject);
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    BinaryArrayBuilder ab = new();
 
-            ar.ResetBitIndex();
+                    BinarySerializer.SerializeExceptionThrowing(ab, originModel);
 
-            deserializedObject = BinarySerializer.DeserializeExceptionThrowing<ObjectPropertyModel>(ar);
-            originModel.AssetEqual(deserializedObject);
+                    BinaryArrayReader ar = new(ab.GetByteArray());
 
-            ar.ResetBitIndex();
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionThrowing<ObjectPropertyModel>(ar));
+                });
+            }
 
-            deserializedObject = BinarySerializer.DeserializeExceptionThrowing(ar, typeof(ObjectPropertyModel)) as ObjectPropertyModel;
-            originModel.AssetEqual(deserializedObject);
+            // Dynamic type
+            {
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionShielding((object)originModel, eh);
+
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionShielding(serializedContent, typeof(ObjectPropertyModel), eh) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    BinaryArrayBuilder ab = new();
+
+                    BinarySerializer.SerializeExceptionShielding(ab, (object)originModel, eh);
+
+                    BinaryArrayReader ar = new(ab.GetByteArray());
+
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(ObjectPropertyModel), eh) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionThrowing((object)originModel);
+
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionThrowing(serializedContent, typeof(ObjectPropertyModel)) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    BinaryArrayBuilder ab = new();
+
+                    BinarySerializer.SerializeExceptionThrowing(ab, (object)originModel);
+
+                    BinaryArrayReader ar = new(ab.GetByteArray());
+
+                    originModel.AssetEqual(BinarySerializer.DeserializeExceptionThrowing(ar, typeof(ObjectPropertyModel)) as ObjectPropertyModel);
+                });
+            }
         }
+
 
         private void _VerifyModelTypeCooking<ModelType>()
             where ModelType : class

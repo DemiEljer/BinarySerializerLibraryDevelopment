@@ -1,7 +1,9 @@
 using BinarySerializerLibrary;
-using BinarySerializerLibrary.Base;
+using BinarySerializerLibrary.BinaryDataHandlers;
+using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
 using BinarySerializerLibraryTests.Models;
+using System;
 
 namespace BinarySerializerLibraryTests;
 
@@ -13,52 +15,110 @@ public class BounderyConditionsBinarySerializationInvoke
     {
         BinaryArrayBuilder ab = new();
 
-        BoolPropertyModel originModelBool = new();
-        BytePropertyModel originModelByte = new();
-        CharPropertyModel originModelChar = new();
-        DoublePropertyModel originModelDouble = new();
-        FloatPropertyModel originModelFloat = new();
-        Int16PropertyModel originModelInt16 = new();
-        Int32PropertyModel originModelInt32 = new();
-        Int64PropertyModel originModelInt64 = new();
-        ObjectPropertyModel originModelObject = new();
-        SBytePropertyModel originModelSByte = new();
-        StringPropertyModel originModelString = new();
-        UInt16PropertyModel originModelUInt16 = new();
-        UInt32PropertyModel originModelUInt32 = new();
-        UInt64PropertyModel originModelUInt64 = new();
+        List<(Type modelType, object modelObject)> originModels = new();
+        List<int> modelSizes = new();
 
-        BinarySerializer.SerializeExceptionShielding(ab, originModelBool);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelByte);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelChar);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelDouble);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelFloat);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelInt16);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelInt32);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelInt64);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelObject);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelSByte);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelString);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelUInt16);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelUInt32);
-        BinarySerializer.SerializeExceptionShielding(ab, originModelUInt64);
+        originModels.Add((typeof(BoolPropertyModel), new BoolPropertyModel()));
+        originModels.Add((typeof(BytePropertyModel), new BytePropertyModel()));
+        originModels.Add((typeof(CharPropertyModel), new CharPropertyModel()));
+        originModels.Add((typeof(DoublePropertyModel), new DoublePropertyModel()));
+        originModels.Add((typeof(FloatPropertyModel), new FloatPropertyModel()));
+        originModels.Add((typeof(Int16PropertyModel), new Int16PropertyModel()));
+        originModels.Add((typeof(Int32PropertyModel), new Int32PropertyModel()));
+        originModels.Add((typeof(Int64PropertyModel), new Int64PropertyModel()));
+        originModels.Add((typeof(ObjectPropertyModel), new ObjectPropertyModel()));
+        originModels.Add((typeof(SBytePropertyModel), new SBytePropertyModel()));
+        originModels.Add((typeof(StringPropertyModel), new StringPropertyModel()));
+        originModels.Add((typeof(UInt16PropertyModel), new UInt16PropertyModel()));
+        originModels.Add((typeof(UInt32PropertyModel), new UInt32PropertyModel()));
+        originModels.Add((typeof(UInt64PropertyModel), new UInt64PropertyModel()));
+
+        int prevSerializedVectorSize = 0;
+        foreach (var index in Enumerable.Range(0, originModels.Count))
+        {
+            BinarySerializer.SerializeExceptionShielding(ab, originModels[index].modelObject);
+            modelSizes.Add(ab.BytesCount - prevSerializedVectorSize);
+            prevSerializedVectorSize = ab.BytesCount;
+        }
 
         BinaryArrayReader ar = new(ab.GetByteArray());
 
-        originModelBool.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(BoolPropertyModel)) as BoolPropertyModel);
-        originModelByte.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(BytePropertyModel)) as BytePropertyModel);
-        originModelChar.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(CharPropertyModel)) as CharPropertyModel);
-        originModelDouble.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(DoublePropertyModel)) as DoublePropertyModel);
-        originModelFloat.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(FloatPropertyModel)) as FloatPropertyModel);
-        originModelInt16.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(Int16PropertyModel)) as Int16PropertyModel);
-        originModelInt32.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(Int32PropertyModel)) as Int32PropertyModel);
-        originModelInt64.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(Int64PropertyModel)) as Int64PropertyModel);
-        originModelObject.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(ObjectPropertyModel)) as ObjectPropertyModel);
-        originModelSByte.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(SBytePropertyModel)) as SBytePropertyModel);
-        originModelString.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(StringPropertyModel)) as StringPropertyModel);
-        originModelUInt16.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(UInt16PropertyModel)) as UInt16PropertyModel);
-        originModelUInt32.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(UInt32PropertyModel)) as UInt32PropertyModel);
-        originModelUInt64.AssetEqual(BinarySerializer.DeserializeExceptionShielding(ar, typeof(UInt64PropertyModel)) as UInt64PropertyModel);
+        foreach (var index in Enumerable.Range(0, originModels.Count))
+        {
+            Assert.IsTrue(BinarySerializer.CheckIfSerializedObjectSizeCanBeRead(ar));
+            Assert.IsTrue(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+            Assert.IsNotNull(BinarySerializer.GetSerializedObjectSize(ar));
+            Assert.AreEqual(modelSizes[index], BinarySerializer.GetSerializedObjectSize(ar));
+
+            var method = originModels[index].modelType.GetMethod("AssetEqual");
+            Assert.IsNotNull(method);
+            method.Invoke(originModels[index].modelObject, new object?[] { BinarySerializer.DeserializeExceptionShielding(ar, originModels[index].modelType) });
+        }
+
+        Assert.IsFalse(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+        Assert.IsFalse(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+        Assert.IsNull(BinarySerializer.GetSerializedObjectSize(ar));
+
+        ar.ResetBitIndex();
+    }
+
+    [TestMethod]
+    public void SerializationInvokeForPluralObjectsWithNullObjects()
+    {
+        BinaryArrayBuilder ab = new();
+
+        List<(Type modelType, object? modelObject)> originModels = new();
+        List<int> modelSizes = new();
+
+        originModels.Add((typeof(BoolPropertyModel), new BoolPropertyModel()));
+        originModels.Add((typeof(BytePropertyModel), null));
+        originModels.Add((typeof(CharPropertyModel), new CharPropertyModel()));
+        originModels.Add((typeof(DoublePropertyModel), null));
+        originModels.Add((typeof(FloatPropertyModel), new FloatPropertyModel()));
+        originModels.Add((typeof(Int16PropertyModel), null));
+        originModels.Add((typeof(Int32PropertyModel), new Int32PropertyModel()));
+        originModels.Add((typeof(Int64PropertyModel), null));
+        originModels.Add((typeof(ObjectPropertyModel), new ObjectPropertyModel()));
+        originModels.Add((typeof(SBytePropertyModel), null));
+        originModels.Add((typeof(StringPropertyModel), new StringPropertyModel()));
+        originModels.Add((typeof(UInt16PropertyModel), null));
+        originModels.Add((typeof(UInt32PropertyModel), new UInt32PropertyModel()));
+        originModels.Add((typeof(UInt64PropertyModel), null));
+
+        int prevSerializedVectorSize = 0;
+        foreach (var index in Enumerable.Range(0, originModels.Count))
+        {
+            BinarySerializer.SerializeExceptionShielding(ab, originModels[index].modelObject);
+            modelSizes.Add(ab.BytesCount - prevSerializedVectorSize);
+            prevSerializedVectorSize = ab.BytesCount;
+        }
+
+        BinaryArrayReader ar = new(ab.GetByteArray());
+
+        foreach (var index in Enumerable.Range(0, originModels.Count))
+        {
+            Assert.IsTrue(BinarySerializer.CheckIfSerializedObjectSizeCanBeRead(ar));
+            Assert.IsTrue(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+            Assert.IsNotNull(BinarySerializer.GetSerializedObjectSize(ar));
+            Assert.AreEqual(modelSizes[index], BinarySerializer.GetSerializedObjectSize(ar));
+
+            var deserializedObject = BinarySerializer.DeserializeExceptionShielding(ar, originModels[index].modelType);
+
+            if (originModels[index].modelObject is null)
+            {
+                Assert.IsNull(deserializedObject);
+            }
+            else
+            {  
+                var method = originModels[index].modelType.GetMethod("AssetEqual");
+                Assert.IsNotNull(method);
+                method.Invoke(originModels[index].modelObject, new object?[] { deserializedObject });
+            }
+        }
+
+        Assert.IsFalse(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+        Assert.IsFalse(BinarySerializer.CheckIfSerializedObjectCanBeRead(ar));
+        Assert.IsNull(BinarySerializer.GetSerializedObjectSize(ar));
 
         ar.ResetBitIndex();
     }
@@ -69,20 +129,40 @@ public class BounderyConditionsBinarySerializationInvoke
         var serializedData = BinarySerializer.SerializeExceptionShielding<BoolPropertyModel>(null);
 
         Assert.IsNotNull(serializedData);
-        Assert.IsTrue(serializedData.Length == 0);
+        Assert.IsTrue(serializedData.Length == 2);
+        Assert.AreEqual(4, serializedData[0]);
+        Assert.AreEqual(0, serializedData[1]);
 
         serializedData = BinarySerializer.SerializeExceptionThrowing<BoolPropertyModel>(null);
 
         Assert.IsNotNull(serializedData);
-        Assert.IsTrue(serializedData.Length == 0);
+        Assert.IsTrue(serializedData.Length == 2);
+        Assert.AreEqual(4, serializedData[0]);
+        Assert.AreEqual(0, serializedData[1]);
+
+        serializedData = BinarySerializer.SerializeExceptionShielding(null);
+
+        Assert.IsNotNull(serializedData);
+        Assert.IsTrue(serializedData.Length == 2);
+        Assert.AreEqual(4, serializedData[0]);
+        Assert.AreEqual(0, serializedData[1]);
+
+        serializedData = BinarySerializer.SerializeExceptionThrowing(null);
+
+        Assert.IsNotNull(serializedData);
+        Assert.IsTrue(serializedData.Length == 2);
+        Assert.AreEqual(4, serializedData[0]);
+        Assert.AreEqual(0, serializedData[1]);
     }
 
     [TestMethod]
     public void SerializationInvokeWithNullBuilder()
     {
+#pragma warning disable CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
         Helpers.CheckExceptionHasThrown<ArgumentNullException>((eh) => BinarySerializer.SerializeExceptionShielding<object>(null, null, eh));
 
         Assert.ThrowsException<ArgumentNullException>(() => BinarySerializer.SerializeExceptionThrowing<object>(null, null));
+#pragma warning restore CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
     }
 
     [TestMethod]
@@ -116,8 +196,20 @@ public class BounderyConditionsBinarySerializationInvoke
     {
         BinaryArrayReader? binaryReader = null;
 
+#pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
         Helpers.CheckExceptionHasThrown<ArgumentNullException>((eh) => BinarySerializer.DeserializeExceptionShielding<object>(binaryReader, eh));
 
         Assert.ThrowsException<ArgumentNullException>(() => BinarySerializer.DeserializeExceptionThrowing<object>(binaryReader));
+#pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+    }
+
+    [TestMethod]
+    public void CookingUnsuitableObjectsTest()
+    {
+        Assert.ThrowsException<ObjectTypeVerificationFailedException>(() => BinarySerializer.CookObjectRecipeExceptionThrowing(typeof(object)));
+        Assert.ThrowsException<ObjectTypeVerificationFailedException>(() => BinarySerializer.CookObjectRecipeExceptionThrowing<object>());
+
+        Helpers.CheckExceptionHasThrown<ObjectTypeVerificationFailedException>((eh) => BinarySerializer.CookObjectRecipeExceptionShielding(typeof(object), eh));
+        Helpers.CheckExceptionHasThrown<ObjectTypeVerificationFailedException>((eh) => BinarySerializer.CookObjectRecipeExceptionShielding<object>(eh));
     }
 }

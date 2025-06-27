@@ -103,10 +103,17 @@ namespace BinarySerializerLibraryTests.Base
 
             bool errorHasThrownFlag = false;
 
-            handlerDelegate.Invoke((e) =>
+            try
             {
-                errorHasThrownFlag = e is ExceptionType;
-            });
+                handlerDelegate.Invoke((e) =>
+                {
+                    errorHasThrownFlag = e is ExceptionType;
+                });
+            }
+            catch
+            {
+                Assert.Fail();
+            }
 
             Assert.IsTrue(errorHasThrownFlag);
         }
@@ -118,10 +125,17 @@ namespace BinarySerializerLibraryTests.Base
                 Assert.Fail();
             }
 
-            handlerDelegate.Invoke((e) =>
+            try
+            {
+                handlerDelegate.Invoke((e) =>
+                {
+                    Assert.Fail();
+                });
+            }
+            catch
             {
                 Assert.Fail();
-            });
+            }
         }
 
         public static void CheckExceptionHasNotThrown(Action handlerDelegate)

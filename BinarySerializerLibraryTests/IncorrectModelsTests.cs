@@ -1,5 +1,5 @@
 using BinarySerializerLibrary;
-using BinarySerializerLibrary.Base;
+using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
 using BinarySerializerLibraryTests.IncorrectModels;

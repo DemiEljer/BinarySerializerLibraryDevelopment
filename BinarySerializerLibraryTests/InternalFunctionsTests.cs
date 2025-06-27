@@ -1,5 +1,5 @@
 using BinarySerializerLibrary.Attributes;
-using BinarySerializerLibrary.Base;
+using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Enums;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibrary.ObjectSerializationRecipes;

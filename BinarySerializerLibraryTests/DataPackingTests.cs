@@ -11,7 +11,7 @@ public class DataPackingTests
     [TestMethod]
     public void ModelPackingTest()
     {
-        foreach (var index in Enumerable.Range(0, 100))
+        foreach (var index in Enumerable.Range(0, 1000))
         {
             TestPackingModel model = TestPackingModel.Create();
 
@@ -20,7 +20,9 @@ public class DataPackingTests
 #pragma warning disable CS8629 // Тип значения, допускающего NULL, может быть NULL.
             var targetData = new byte[]
             {
-                (byte)(0x01 | (model.ByteField1 << 1))
+                (byte)(0x0B << 1)
+                , (byte)(0)
+                , (byte)(0x01 | (model.ByteField1 << 1))
                 , (byte)(model.ByteField2)
                 , (byte)((model.ByteField3 is null ? 0x00 : 0x01) | (model.ByteField3 is null ? 0x00 : model.ByteField3) << 1)
                 , (byte)((model.ByteField4 is null ? 0x00 : 0x01) | (model.ByteField4 is null ? 0x00 : model.ByteField4) << 1)
