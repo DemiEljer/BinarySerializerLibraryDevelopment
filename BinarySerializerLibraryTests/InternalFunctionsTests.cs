@@ -154,17 +154,19 @@ public class InternalFunctionsTests
             , typeof(List<string>)          // 89
         };
 
+        ObjectTypeVerificationHandler verificationHandler = new();
+
         void _VerifyAttribute(BinaryTypeBaseAttribute attribute, int[] suitableTypesIndexes)
         {
             foreach (var index in Enumerable.Range(0, typesCollection.Length))
             {
                 if (suitableTypesIndexes.Contains(index))
                 {
-                    Assert.IsTrue(ObjectTypeVerificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
+                    Assert.IsTrue(verificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
                 }
                 else
                 {
-                    Assert.IsFalse(ObjectTypeVerificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
+                    Assert.IsFalse(verificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
                 }
             }
         }

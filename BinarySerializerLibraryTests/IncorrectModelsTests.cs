@@ -50,7 +50,7 @@ public class IncorrectModelsTests
     {
         _VerifyModelTypeCooking<ModelWithoutDefaultConstructor>();
 
-        // Попытки сериализации
+        // РџРѕРїС‹С‚РєРё СЃРµСЂРёР°Р»РёР·Р°С†РёРё
         {
             var model = new ModelWithoutDefaultConstructor(1);
 

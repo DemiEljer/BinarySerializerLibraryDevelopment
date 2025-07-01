@@ -287,6 +287,48 @@ namespace BinarySerializerLibraryTests
                     originModel.AssetEqual(BinarySerializer.DeserializeExceptionThrowing(ar, typeof(ObjectPropertyModel)) as ObjectPropertyModel);
                 });
             }
+
+            BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(ObjectPropertyModel), 2);
+            // Проверка, что повторное добавление типа под тем же номером не приводит к ошибке
+            BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(ObjectPropertyModel), 2);
+            // Auto type
+            {
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionShielding((object)originModel, eh);
+
+                    originModel.AssetEqual(BinarySerializer.AutoDeserializeExceptionShielding(serializedContent, eh) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown((eh) =>
+                {
+                    BinaryArrayBuilder ab = new();
+
+                    BinarySerializer.SerializeExceptionShielding(ab, (object)originModel, eh);
+
+                    BinaryArrayReader ar = new(ab.GetByteArray());
+
+                    originModel.AssetEqual(BinarySerializer.AutoDeserializeExceptionShielding(ar, eh) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    var serializedContent = BinarySerializer.SerializeExceptionThrowing((object)originModel);
+
+                    originModel.AssetEqual(BinarySerializer.AutoDeserializeExceptionThrowing(serializedContent) as ObjectPropertyModel);
+                });
+
+                Helpers.CheckExceptionHasNotThrown(() =>
+                {
+                    BinaryArrayBuilder ab = new();
+
+                    BinarySerializer.SerializeExceptionThrowing(ab, (object)originModel);
+
+                    BinaryArrayReader ar = new(ab.GetByteArray());
+
+                    originModel.AssetEqual(BinarySerializer.AutoDeserializeExceptionThrowing(ar) as ObjectPropertyModel);
+                });
+            }
         }
 
 

@@ -33,11 +33,11 @@ public class BounderyConditionsBinarySerializationInvoke
         originModels.Add((typeof(UInt32PropertyModel), new UInt32PropertyModel()));
         originModels.Add((typeof(UInt64PropertyModel), new UInt64PropertyModel()));
 
-        int prevSerializedVectorSize = 0;
+        long prevSerializedVectorSize = 0;
         foreach (var index in Enumerable.Range(0, originModels.Count))
         {
             BinarySerializer.SerializeExceptionShielding(ab, originModels[index].modelObject);
-            modelSizes.Add(ab.BytesCount - prevSerializedVectorSize);
+            modelSizes.Add((int)(ab.BytesCount - prevSerializedVectorSize));
             prevSerializedVectorSize = ab.BytesCount;
         }
 
@@ -89,8 +89,8 @@ public class BounderyConditionsBinarySerializationInvoke
         foreach (var index in Enumerable.Range(0, originModels.Count))
         {
             BinarySerializer.SerializeExceptionShielding(ab, originModels[index].modelObject);
-            modelSizes.Add(ab.BytesCount - prevSerializedVectorSize);
-            prevSerializedVectorSize = ab.BytesCount;
+            modelSizes.Add((int)(ab.BytesCount - prevSerializedVectorSize));
+            prevSerializedVectorSize = (int)(ab.BytesCount);
         }
 
         BinaryArrayReader ar = new(ab.GetByteArray());
@@ -212,4 +212,40 @@ public class BounderyConditionsBinarySerializationInvoke
         Helpers.CheckExceptionHasThrown<ObjectTypeVerificationFailedException>((eh) => BinarySerializer.CookObjectRecipeExceptionShielding(typeof(object), eh));
         Helpers.CheckExceptionHasThrown<ObjectTypeVerificationFailedException>((eh) => BinarySerializer.CookObjectRecipeExceptionShielding<object>(eh));
     }
+
+    public void TypeRegisterForAutoSerializationTest()
+    {
+        // Регистрация двух одинаковых типов с одним кодом
+        {
+            Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<CharPropertyModel>(10));
+            Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(CharPropertyModel), 10));
+        }
+        // Регистрация двух одинаковых типов с разными кодами
+        {
+            Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<SBytePropertyModel>(11));
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(SBytePropertyModel), 12));
+        }
+        // Регистрация двух разных типов с одинаковым кодом
+        {
+            Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<UInt16PropertyModel>(13));
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(UInt32PropertyModel), 14));
+        }
+        // Регистрация типа с нулевым кодом
+        {
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(BytePropertyModel), 0));
+        }
+        // Регистрация типа со слишком большим кодом
+        {
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(BytePropertyModel), 0x40000000));
+        }
+        // Регистрация пустого типа
+        {
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(null, 15));
+        }
+        // Регистрация неподходящего типа
+        {
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(List<int>), 15));
+        }
+    }
+
 }
