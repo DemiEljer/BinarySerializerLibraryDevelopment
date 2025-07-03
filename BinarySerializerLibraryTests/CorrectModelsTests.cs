@@ -2,7 +2,9 @@
 using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
+using BinarySerializerLibraryTests.CorrectModels;
 using BinarySerializerLibraryTests.Models;
+using BinarySerializerLibraryTests.TestModels;
 
 namespace BinarySerializerLibraryTests
 {
@@ -201,6 +203,20 @@ namespace BinarySerializerLibraryTests
             var serializedData = BinarySerializer.SerializeExceptionShielding(originModel);
 
             var deserializedObject = BinarySerializer.DeserializeExceptionShielding<ObjectPropertyModel>(serializedData);
+
+            originModel.AssetEqual(deserializedObject);
+        }
+
+        [TestMethod]
+        public void Auto_SerializationAndDeserializationTest()
+        {
+            _VerifyModelTypeCooking<AutoDetectPropertyModel>();
+
+            AutoDetectPropertyModel originModel = new AutoDetectPropertyModel();
+
+            var serializedData = BinarySerializer.SerializeExceptionShielding(originModel);
+
+            var deserializedObject = BinarySerializer.DeserializeExceptionShielding<AutoDetectPropertyModel>(serializedData);
 
             originModel.AssetEqual(deserializedObject);
         }

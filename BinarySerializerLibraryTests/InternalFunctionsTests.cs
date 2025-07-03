@@ -3,7 +3,7 @@ using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Enums;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibrary.ObjectSerializationRecipes;
-using BinarySerializerLibrary.Serializers;
+using BinarySerializerLibrary.Serializers.ComplexTypes;
 
 namespace BinarySerializerLibraryTests;
 
@@ -154,19 +154,31 @@ public class InternalFunctionsTests
             , typeof(List<string>)          // 89
         };
 
-        ObjectTypeVerificationHandler verificationHandler = new();
+        ObjectTypeVerificationAndExtractionHandler verificationAndExtractionHandler = new();
 
         void _VerifyAttribute(BinaryTypeBaseAttribute attribute, int[] suitableTypesIndexes)
         {
             foreach (var index in Enumerable.Range(0, typesCollection.Length))
             {
+                var extractedAttribute = verificationAndExtractionHandler.GetPropertyAttribute(typesCollection[index], new BinaryTypeAutoAttribute());
+
                 if (suitableTypesIndexes.Contains(index))
                 {
-                    Assert.IsTrue(verificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
+                    Assert.IsTrue(verificationAndExtractionHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
+
+                    // Проверка совпадения извлеченного атрибута и целевого
+                    {
+                        Assert.AreEqual(attribute.GetType(), extractedAttribute?.GetType());
+                        Assert.AreEqual(attribute.Type, extractedAttribute?.Type);
+                        if (attribute.Nullable == BinaryNullableTypeEnum.NotNullable)
+                        {
+                            Assert.AreEqual(attribute.Nullable, extractedAttribute?.Nullable);
+                        }
+                    }
                 }
                 else
                 {
-                    Assert.IsFalse(verificationHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
+                    Assert.IsFalse(verificationAndExtractionHandler.VerifyPropertyType(typesCollection[index], attribute), $"{attribute} : {typesCollection[index]}");
                 }
             }
         }

@@ -78,12 +78,15 @@ BinarySerializer.CookObjectRecipeExceptionShielding<CANMessage>((e) => Console.W
 |BinaryTypeCharAttribute|char|16 бит|
 |BinaryTypeStringAttribute|string|16 бит на символ|
 |BinaryTypeObjectAttribute|Атрибут-метка, что вложенный объект необходимо сериализовать|-|
+|BinaryTypeAutoAttribute|Автоматическое определение типа свойства|-|
 
 Также, при объявлении сериализуемых классов, необходимо помечать их атрибутом **BinarySerializableObjectAttribute**.
 
 > **Примечание.** Атрибуты **BinaryTypeIntAttribute** и **BinaryTypeUIntAttribute** позволяют управлять размером сериализуемого значения, что позволяет экономить место при получении двоичного представления в случаях, если не весь диапазон значений оригинального типа задействуется.
 
 > **Примечание.** При сериализации целочисленных значений (**BinaryTypeIntAttribute** и **BinaryTypeUIntAttribute**) учитываются фактические граничные значения, задаваемые размерами поля, в случае, если значение не помещается в заданные рамки, будет выброшено исключение **TypeTooSmallForValueException**.
+
+> **Примечание.** При автоматическом определении типа свойства (**BinaryTypeAutoAttribute**) будет выбран один из атрибутов конкретного декларирования.
 
 При добавлении атрибутов (в конструкторах) можно указать выравнивание сериализуемых свойств с помощью перечисления **BinaryAlignmentTypeEnum**.
 
