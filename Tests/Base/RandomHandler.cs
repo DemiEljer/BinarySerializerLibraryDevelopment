@@ -13,6 +13,11 @@ namespace BinarySerializerLibraryTests.Base
 
         public static int GetNextCollectionSize(int maxCollectionSize = 100, int minCollectionSize = 0) => (_Rnd.Next() % (maxCollectionSize - minCollectionSize)) + minCollectionSize;
 
+        public static void SetRandomSeed(int seed)
+        {
+            _Rnd = new Random(seed);
+        }
+
         #region NotNullable
 
         public static bool GetNextBool() => (bool)((GetNextUInt8() % 2) == 1);

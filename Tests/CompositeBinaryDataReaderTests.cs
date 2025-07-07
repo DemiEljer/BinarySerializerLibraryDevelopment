@@ -8,6 +8,31 @@ namespace BinarySerializerLibraryTests;
 [TestClass]
 public class CompositeBinaryDataReaderTests
 {
+    public static List<byte[]> GetSubSequences(byte[] byteSequence, int subSequencesCount)
+    {
+        List<byte[]> subSeuqnces = new();
+
+        IEnumerable<byte> _GetSubSequence(byte[] byteSequence, int startIndex, int count)
+        {
+            foreach (var index in Enumerable.Range(startIndex, count))
+            {
+                yield return byteSequence[index];
+            }
+        }
+
+        foreach (var index in Enumerable.Range(0, subSequencesCount))
+        {
+            int subSequenceSize = index == (subSequencesCount - 1)
+                ? byteSequence.Length - byteSequence.Length / subSequencesCount * index
+                : byteSequence.Length / subSequencesCount;
+            int subSequenceStartIndex = byteSequence.Length / subSequencesCount * index;
+
+            subSeuqnces.Add(_GetSubSequence(byteSequence, subSequenceStartIndex, subSequenceSize).ToArray());
+        }
+
+        return subSeuqnces;
+    }
+
     [TestMethod]
     public void ReadingOneObjectFromSeveralReadersTest()
     {
@@ -15,30 +40,10 @@ public class CompositeBinaryDataReaderTests
         
         var serializedContent = BinarySerializer.SerializeExceptionShielding(originModel);
 
-        List<byte[]> subSerializedContents = new();
         // Выделение нескольких отдельных последовательностей из одной общей
-        {
-            IEnumerable<byte> _GetSubSequence(byte[] byteSequence, int startIndex, int count)
-            {
-                foreach (var index in Enumerable.Range(startIndex, count))
-                {
-                    yield return byteSequence[index];
-                }
-            }
+        List<byte[]> subSerializedContents = GetSubSequences(serializedContent, 10);
 
-            int subSequencesCount = 10;
-            foreach (var index in Enumerable.Range(0, subSequencesCount))
-            {
-                int subSequenceSize = index == (subSequencesCount - 1) 
-                    ? serializedContent.Length - serializedContent.Length / subSequencesCount * index
-                    : serializedContent.Length / subSequencesCount;
-                int subSequenceStartIndex = serializedContent.Length / subSequencesCount * index;
-
-                subSerializedContents.Add(_GetSubSequence(serializedContent, subSequenceStartIndex, subSequenceSize).ToArray());
-            }
-
-            Assert.IsTrue(subSerializedContents.Sum(subSequence => subSequence.Length) == serializedContent.Length);
-        }
+        Assert.IsTrue(subSerializedContents.Sum(subSequence => subSequence.Length) == serializedContent.Length);
 
         CompositeBinaryDataReader compositeReader = new();
 

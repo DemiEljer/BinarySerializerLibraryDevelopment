@@ -1,0 +1,35 @@
+=== Custom serialization ===
+Benchmarks.Models.TestModelLevel2 :: 2474 bytes
+Benchmarks.Models.TestModelLevel3 :: 7062 bytes
+Benchmarks.Models.TestModelLevel4 :: 21577 bytes
+=== JSON serialization ===
+Benchmarks.Models.TestModelLevel2 :: 14410 bytes
+Benchmarks.Models.TestModelLevel3 :: 39660 bytes
+Benchmarks.Models.TestModelLevel4 :: 121036 bytes
+
+| Method                                           | Mean        | Error     | StdDev    |
+|------------------------------------------------- |------------:|----------:|----------:|
+| Custom_Serialization_ModelLevel2_EmptyBuilder    |    32.83 us |  0.527 us |  0.493 us |
+| Custom_Serialization_ModelLevel2_StandardBuilder |    42.52 us |  0.790 us |  0.739 us |
+| Custom_Serialization_ModelLevel2_FastBuilder     |    39.70 us |  0.536 us |  0.502 us |
+| Custom_Serialization_ModelLevel2_SlowBuilder     |   137.37 us |  2.310 us |  2.048 us |
+| Json_Serialization_ModelLevel2                   |    27.90 us |  0.444 us |  0.415 us |
+| Custom_Deserialization_ModelLevel2               |    20.12 us |  0.386 us |  0.397 us |
+| Custom_Deserialization_ModelLevel2_Composite     |    38.47 us |  0.737 us |  0.690 us |
+| Json_Deserialization_ModelLevel2                 |    43.91 us |  0.646 us |  0.604 us |
+| Custom_Serialization_ModelLevel3_EmptyBuilder    |   105.20 us |  1.186 us |  1.109 us |
+| Custom_Serialization_ModelLevel3_StandardBuilder |   148.81 us |  2.386 us |  2.232 us |
+| Custom_Serialization_ModelLevel3_FastBuilder     |   133.48 us |  1.211 us |  1.011 us |
+| Custom_Serialization_ModelLevel3_SlowBuilder     |   376.34 us |  3.568 us |  3.337 us |
+| Json_Serialization_ModelLevel3                   |   376.06 us |  6.385 us |  6.831 us |
+| Custom_Deserialization_ModelLevel3               |    45.08 us |  0.829 us |  0.776 us |
+| Custom_Deserialization_ModelLevel3_Composite     |    46.53 us |  0.883 us |  0.867 us |
+| Json_Deserialization_ModelLevel3                 |   163.62 us |  3.211 us |  3.004 us |
+| Custom_Serialization_ModelLevel4_EmptyBuilder    |   284.54 us |  2.709 us |  2.401 us |
+| Custom_Serialization_ModelLevel4_StandardBuilder |   430.81 us |  4.933 us |  4.614 us |
+| Custom_Serialization_ModelLevel4_FastBuilder     |   425.84 us |  8.437 us |  7.892 us |
+| Custom_Serialization_ModelLevel4_SlowBuilder     | 1,182.61 us | 14.140 us | 13.227 us |
+| Json_Serialization_ModelLevel4                   |   377.12 us |  7.275 us |  8.660 us |
+| Custom_Deserialization_ModelLevel4               |   114.48 us |  2.267 us |  2.520 us |
+| Custom_Deserialization_ModelLevel4_Composite     |   123.40 us |  2.413 us |  2.370 us |
+| Json_Deserialization_ModelLevel4                 |   510.81 us |  4.907 us |  4.097 us |

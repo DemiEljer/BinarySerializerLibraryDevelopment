@@ -1,0 +1,93 @@
+=== Custom serialization ===
+BinarySerializerLibraryTests.CorrectModels.AutoDetectPropertyModel :: 2064725 bytes
+BinarySerializerLibraryTests.Models.BoolPropertyModel :: 312 bytes
+BinarySerializerLibraryTests.Models.BytePropertyModel :: 518 bytes
+BinarySerializerLibraryTests.Models.CharPropertyModel :: 1047 bytes
+BinarySerializerLibraryTests.Models.DoublePropertyModel :: 3340 bytes
+BinarySerializerLibraryTests.Models.FloatPropertyModel :: 1624 bytes
+BinarySerializerLibraryTests.Models.Int16PropertyModel :: 788 bytes
+BinarySerializerLibraryTests.Models.Int32PropertyModel :: 1453 bytes
+BinarySerializerLibraryTests.Models.Int64PropertyModel :: 2205 bytes
+BinarySerializerLibraryTests.Models.ObjectPropertyModel :: 676780 bytes
+BinarySerializerLibraryTests.Models.SBytePropertyModel :: 500 bytes
+BinarySerializerLibraryTests.Models.UInt16PropertyModel :: 797 bytes
+BinarySerializerLibraryTests.Models.UInt32PropertyModel :: 1133 bytes
+BinarySerializerLibraryTests.Models.UInt64PropertyModel :: 3146 bytes
+=== JSON serialization ===
+BinarySerializerLibraryTests.CorrectModels.AutoDetectPropertyModel :: 2404988 bytes
+BinarySerializerLibraryTests.Models.BoolPropertyModel :: 6348 bytes
+BinarySerializerLibraryTests.Models.BytePropertyModel :: 4178 bytes
+BinarySerializerLibraryTests.Models.CharPropertyModel :: 5700 bytes
+BinarySerializerLibraryTests.Models.DoublePropertyModel :: 17122 bytes
+BinarySerializerLibraryTests.Models.FloatPropertyModel :: 9832 bytes
+BinarySerializerLibraryTests.Models.Int16PropertyModel :: 5868 bytes
+BinarySerializerLibraryTests.Models.Int32PropertyModel :: 9216 bytes
+BinarySerializerLibraryTests.Models.Int64PropertyModel :: 12386 bytes
+BinarySerializerLibraryTests.Models.ObjectPropertyModel :: 1523028 bytes
+BinarySerializerLibraryTests.Models.SBytePropertyModel :: 4586 bytes
+BinarySerializerLibraryTests.Models.UInt16PropertyModel :: 5770 bytes
+BinarySerializerLibraryTests.Models.UInt32PropertyModel :: 6924 bytes
+BinarySerializerLibraryTests.Models.UInt64PropertyModel :: 16932 bytes
+
+| Method                                  | Mean          | Error         | StdDev        |
+|---------------------------------------- |--------------:|--------------:|--------------:|
+| AutoModel_Custom_SerializeBenchmark     | 58,446.619 us | 1,135.5771 us | 1,958.8148 us |
+| BoolModel_Custom_SerializeBenchmark     |     31.799 us |     0.1639 us |     0.1453 us |
+| ByteModel_Custom_SerializeBenchmark     |     31.745 us |     0.1618 us |     0.1351 us |
+| CharModel_Custom_SerializeBenchmark     |     37.045 us |     0.6482 us |     0.6063 us |
+| DoubleModel_Custom_SerializeBenchmark   |     38.282 us |     0.5792 us |     0.5134 us |
+| FloatModel_Custom_SerializeBenchmark    |     31.302 us |     0.2467 us |     0.2308 us |
+| Int16Model_Custom_SerializeBenchmark    |     36.169 us |     0.4092 us |     0.3828 us |
+| Int32Model_Custom_SerializeBenchmark    |     30.405 us |     0.2794 us |     0.2614 us |
+| Int64Model_Custom_SerializeBenchmark    |     29.405 us |     0.2390 us |     0.2118 us |
+| ObjectModel_Custom_SerializeBenchmark   |  7,005.771 us |   135.4378 us |   144.9169 us |
+| SByteModel_Custom_SerializeBenchmark    |     28.316 us |     0.1708 us |     0.1514 us |
+| StringModel_Custom_SerializeBenchmark   |    883.747 us |     9.2287 us |     7.7064 us |
+| UInt16Model_Custom_SerializeBenchmark   |     36.197 us |     0.1726 us |     0.1530 us |
+| UInt32Model_Custom_SerializeBenchmark   |     30.205 us |     0.1803 us |     0.1598 us |
+| UInt64Model_Custom_SerializeBenchmark   |     44.087 us |     0.2248 us |     0.1993 us |
+| AutoModel_Json_SerializeBenchmark       |  5,317.850 us |    79.7278 us |    74.5775 us |
+| BoolModel_Json_SerializeBenchmark       |     19.441 us |     0.0911 us |     0.0761 us |
+| ByteModel_Json_SerializeBenchmark       |      9.894 us |     0.0381 us |     0.0318 us |
+| CharModel_Json_SerializeBenchmark       |     29.453 us |     0.1032 us |     0.0915 us |
+| DoubleModel_Json_SerializeBenchmark     |     39.620 us |     0.3902 us |     0.3650 us |
+| FloatModel_Json_SerializeBenchmark      |     37.346 us |     0.1816 us |     0.1610 us |
+| Int16Model_Json_SerializeBenchmark      |     17.620 us |     0.0987 us |     0.0875 us |
+| Int32Model_Json_SerializeBenchmark      |     18.001 us |     0.0962 us |     0.0852 us |
+| Int64Model_Json_SerializeBenchmark      |     17.594 us |     0.2026 us |     0.1582 us |
+| ObjectModel_Json_SerializeBenchmark     |  4,787.427 us |    95.5650 us |   164.8450 us |
+| SByteModel_Json_SerializeBenchmark      |     11.106 us |     0.0674 us |     0.0631 us |
+| StringModel_Json_SerializeBenchmark     |     41.934 us |     0.5639 us |     0.4998 us |
+| UInt16Model_Json_SerializeBenchmark     |     18.405 us |     0.1528 us |     0.1276 us |
+| UInt32Model_Json_SerializeBenchmark     |     12.659 us |     0.1093 us |     0.1022 us |
+| UInt64Model_Json_SerializeBenchmark     |     26.627 us |     0.1034 us |     0.0916 us |
+| AutoModel_Custom_DeserializeBenchmark   | 44,716.382 us |   564.2578 us |   527.8071 us |
+| BoolModel_Custom_DeserializeBenchmark   |     25.910 us |     0.1916 us |     0.1792 us |
+| ByteModel_Custom_DeserializeBenchmark   |     31.251 us |     0.2575 us |     0.2409 us |
+| CharModel_Custom_DeserializeBenchmark   |     29.185 us |     0.0882 us |     0.0689 us |
+| DoubleModel_Custom_DeserializeBenchmark |     36.381 us |     0.2796 us |     0.2478 us |
+| FloatModel_Custom_DeserializeBenchmark  |     25.346 us |     0.2628 us |     0.2458 us |
+| Int16Model_Custom_DeserializeBenchmark  |     32.064 us |     0.2392 us |     0.2237 us |
+| Int32Model_Custom_DeserializeBenchmark  |     30.232 us |     0.1422 us |     0.1188 us |
+| Int64Model_Custom_DeserializeBenchmark  |     27.777 us |     0.3108 us |     0.2755 us |
+| ObjectModel_Custom_DeserializeBenchmark | 26,655.012 us |   505.4600 us |   496.4293 us |
+| SByteModel_Custom_DeserializeBenchmark  |     28.123 us |     0.3898 us |     0.3646 us |
+| StringModel_Custom_DeserializeBenchmark |  1,055.124 us |     7.3551 us |     6.1418 us |
+| UInt16Model_Custom_DeserializeBenchmark |     25.331 us |     0.3375 us |     0.3157 us |
+| UInt32Model_Custom_DeserializeBenchmark |     25.585 us |     0.1078 us |     0.0901 us |
+| UInt64Model_Custom_DeserializeBenchmark |     29.938 us |     0.2119 us |     0.1879 us |
+| AutoModel_Json_DeserializeBenchmark     | 15,013.353 us |   283.1721 us |   302.9909 us |
+| BoolModel_Json_DeserializeBenchmark     |     16.619 us |     0.1784 us |     0.1490 us |
+| ByteModel_Json_DeserializeBenchmark     |     20.241 us |     0.2396 us |     0.2241 us |
+| CharModel_Json_DeserializeBenchmark     |     28.916 us |     0.5441 us |     0.5344 us |
+| DoubleModel_Json_DeserializeBenchmark   |     74.152 us |     1.4756 us |     2.2974 us |
+| FloatModel_Json_DeserializeBenchmark    |     63.965 us |     0.4222 us |     0.3526 us |
+| Int16Model_Json_DeserializeBenchmark    |     38.880 us |     0.4679 us |     0.4148 us |
+| Int32Model_Json_DeserializeBenchmark    |     37.554 us |     0.3268 us |     0.2897 us |
+| Int64Model_Json_DeserializeBenchmark    |     40.371 us |     0.5620 us |     0.5257 us |
+| ObjectModel_Json_DeserializeBenchmark   | 13,142.231 us |   237.6167 us |   291.8147 us |
+| SByteModel_Json_DeserializeBenchmark    |     22.199 us |     0.2002 us |     0.1775 us |
+| StringModel_Json_DeserializeBenchmark   |    187.463 us |     1.0572 us |     0.8828 us |
+| UInt16Model_Json_DeserializeBenchmark   |     28.252 us |     0.2504 us |     0.2091 us |
+| UInt32Model_Json_DeserializeBenchmark   |     27.224 us |     0.2013 us |     0.1681 us |
+| UInt64Model_Json_DeserializeBenchmark   |     42.634 us |     0.4933 us |     0.4373 us |

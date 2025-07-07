@@ -109,7 +109,7 @@ public class BounderyConditionsBinarySerializationInvoke
                 Assert.IsNull(deserializedObject);
             }
             else
-            {  
+            {
                 var method = originModels[index].modelType.GetMethod("AssetEqual");
                 Assert.IsNotNull(method);
                 method.Invoke(originModels[index].modelObject, new object?[] { deserializedObject });
@@ -159,9 +159,9 @@ public class BounderyConditionsBinarySerializationInvoke
     public void SerializationInvokeWithNullBuilder()
     {
 #pragma warning disable CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
-        Helpers.CheckExceptionHasThrown<ArgumentNullException>((eh) => BinarySerializer.SerializeExceptionShielding<object>(null, null, eh));
+        Helpers.CheckExceptionHasThrown<BinaryWriterIsNullException>((eh) => BinarySerializer.SerializeExceptionShielding<object>(null, null, eh));
 
-        Assert.ThrowsException<ArgumentNullException>(() => BinarySerializer.SerializeExceptionThrowing<object>(null, null));
+        Assert.ThrowsException<BinaryWriterIsNullException>(() => BinarySerializer.SerializeExceptionThrowing<object>(null, null));
 #pragma warning restore CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
     }
 
@@ -197,9 +197,9 @@ public class BounderyConditionsBinarySerializationInvoke
         BinaryArrayReader? binaryReader = null;
 
 #pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
-        Helpers.CheckExceptionHasThrown<ArgumentNullException>((eh) => BinarySerializer.DeserializeExceptionShielding<object>(binaryReader, eh));
+        Helpers.CheckExceptionHasThrown<BinaryReaderIsNullException>((eh) => BinarySerializer.DeserializeExceptionShielding<object>(binaryReader, eh));
 
-        Assert.ThrowsException<ArgumentNullException>(() => BinarySerializer.DeserializeExceptionThrowing<object>(binaryReader));
+        Assert.ThrowsException<BinaryReaderIsNullException>(() => BinarySerializer.DeserializeExceptionThrowing<object>(binaryReader));
 #pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
     }
 
