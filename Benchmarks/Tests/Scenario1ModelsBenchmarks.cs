@@ -1,6 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Benchmarks.CustomBenchmarks;
 using Benchmarks.Models;
 using BinarySerializerLibrary;
+using BinarySerializerLibrary.Base;
 using BinarySerializerLibraryTests.CorrectModels;
 using BinarySerializerLibraryTests.Models;
 using Newtonsoft.Json;
@@ -64,6 +66,8 @@ namespace Benchmarks.Tests
             Console.WriteLine($"{UInt32Model.Model.GetType()} :: {UInt32Model.JSonSerializedDataLength} bytes");
             Console.WriteLine($"{UInt64Model.Model.GetType()} :: {UInt64Model.JSonSerializedDataLength} bytes");
         }
+
+        public static void CustomBenchmark() => CustomBenchmarkHandler.CustomBenchmark<Scenario1ModelsBenchmarks>();
 
         #region Serialize
 

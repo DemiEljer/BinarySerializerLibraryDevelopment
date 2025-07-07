@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using Benchmarks.Tests;
+using BinarySerializerLibrary.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,6 +53,42 @@ namespace Benchmarks.CustomBenchmarks
             Console.WriteLine($"{testName} [{iterationsCount}] :: {result} ms");
 
             return result;
+        }
+
+        public static void CustomBenchmark<TestingType>()
+            where TestingType : class, new()
+        {
+            TestingType testingScenarioObject = new();
+
+            List<(string testName, double time)> results = new();
+
+            foreach (var method in typeof(TestingType).GetMethods())
+            {
+                double testTime = 0;
+
+                if (method.GetCustomAttributes(true).FirstOrDefault(a => a is BenchmarkAttribute) != null)
+                {
+                    var methodDelegate = MethodAccessDelegateCompiler.GetMethodDelegate(typeof(TestingType), method);
+                    var concreteTypeMethodDelegate = methodDelegate as Action<TestingType>;
+
+                    if (concreteTypeMethodDelegate is not null)
+                    {
+                        testTime = CustomBenchmarkHandler.BenchmarkAndPrintResult(method.Name, 100, () =>
+                        {
+                            concreteTypeMethodDelegate.Invoke(testingScenarioObject);
+                        });
+
+                        results.Add((method.Name, testTime));
+                    }
+                }
+            }
+
+            Console.WriteLine("\r\nRESULTS\r\n");
+
+            foreach (var test in results)
+            {
+                Console.WriteLine($"{test.testName} :: {Math.Round(test.time, 4)} ms");
+            }
         }
     }
 }

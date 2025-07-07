@@ -36,40 +36,7 @@ namespace Benchmarks.Tests
             Console.WriteLine($"{ModelLevel4.Model.GetType()} :: {ModelLevel4.JSonSerializedDataLength} bytes");
         }
 
-        public static void CustomBenchmark()
-        {
-            Scenario2ModelsBenchmarks testingScenarioObject = new();
-
-            List<(string testName, double time)> results = new();
-
-            foreach (var method in typeof(Scenario2ModelsBenchmarks).GetMethods())
-            {
-                double testTime = 0;
-
-                if (method.GetCustomAttributes(true).FirstOrDefault(a => a is BenchmarkAttribute) != null)
-                {
-                    var methodDelegate = MethodAccessDelegateCompiler.GetMethodDelegate(typeof(Scenario2ModelsBenchmarks), method);
-                    var concreteTypeMethodDelegate = methodDelegate as Action<Scenario2ModelsBenchmarks>;
-
-                    if (concreteTypeMethodDelegate is not null)
-                    {
-                        testTime = CustomBenchmarkHandler.BenchmarkAndPrintResult(method.Name, 100, () =>
-                        {
-                            concreteTypeMethodDelegate.Invoke(testingScenarioObject);
-                        });
-
-                        results.Add((method.Name, testTime));
-                    }
-                }
-            }
-
-            Console.WriteLine("\r\nRESULTS\r\n");
-
-            foreach (var test in results)
-            {
-                Console.WriteLine($"{test.testName} :: {Math.Round(test.time, 4)} ms");
-            }
-        }
+        public static void CustomBenchmark() => CustomBenchmarkHandler.CustomBenchmark<Scenario2ModelsBenchmarks>();
 
         #region Level2
 
@@ -78,7 +45,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryEmptyBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel2.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel2.Model);
 
             var data = builder.GetByteArray();
         }
@@ -87,7 +54,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel2.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel2.Model);
 
             var data = builder.GetByteArray();
         }
@@ -96,7 +63,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayFastBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel2.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel2.Model);
 
             var data = builder.GetByteArray();
         }
@@ -105,7 +72,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArraySlowBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel2.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel2.Model);
 
             var data = builder.GetByteArray();
         }
@@ -117,7 +84,7 @@ namespace Benchmarks.Tests
         [Benchmark]
         public void Custom_Deserialization_ModelLevel2()
         {
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel2>(ModelLevel2.CustomSerializedData);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel2>(ModelLevel2.CustomSerializedData);
         }
         [Benchmark]
         public void Custom_Deserialization_ModelLevel2_Composite()
@@ -128,7 +95,7 @@ namespace Benchmarks.Tests
                 ar.AppendReader(new BinaryArrayReader(subSequence));
             }
 
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel2>(ar);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel2>(ar);
         }
         [Benchmark]
         public void Json_Deserialization_ModelLevel2()
@@ -145,7 +112,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryEmptyBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel3.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel3.Model);
 
             var data = builder.GetByteArray();
         }
@@ -154,7 +121,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel3.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel3.Model);
 
             var data = builder.GetByteArray();
         }
@@ -163,7 +130,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayFastBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel3.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel3.Model);
 
             var data = builder.GetByteArray();
         }
@@ -172,7 +139,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArraySlowBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel3.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel3.Model);
 
             var data = builder.GetByteArray();
         }
@@ -184,7 +151,7 @@ namespace Benchmarks.Tests
         [Benchmark]
         public void Custom_Deserialization_ModelLevel3()
         {
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel3>(ModelLevel3.CustomSerializedData);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel3>(ModelLevel3.CustomSerializedData);
         }
         [Benchmark]
         public void Custom_Deserialization_ModelLevel3_Composite()
@@ -195,7 +162,7 @@ namespace Benchmarks.Tests
                 ar.AppendReader(new BinaryArrayReader(subSequence));
             }
 
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel3>(ar);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel3>(ar);
         }
         [Benchmark]
         public void Json_Deserialization_ModelLevel3()
@@ -213,7 +180,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryEmptyBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel4.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel4.Model);
 
             var data = builder.GetByteArray();
         }
@@ -222,7 +189,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel4.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel4.Model);
 
             var data = builder.GetByteArray();
         }
@@ -231,7 +198,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArrayFastBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel4.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel4.Model);
 
             var data = builder.GetByteArray();
         }
@@ -240,7 +207,7 @@ namespace Benchmarks.Tests
         {
             var builder = new BinaryArraySlowBuilder();
 
-            BinarySerializer.SerializeExceptionShielding(builder, ModelLevel4.Model);
+            BinarySerializer.SerializeExceptionThrowing(builder, ModelLevel4.Model);
 
             var data = builder.GetByteArray();
         }
@@ -252,7 +219,7 @@ namespace Benchmarks.Tests
         [Benchmark]
         public void Custom_Deserialization_ModelLevel4()
         {
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel4>(ModelLevel4.CustomSerializedData);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel4>(ModelLevel4.CustomSerializedData);
         }
         [Benchmark]
         public void Custom_Deserialization_ModelLevel4_Composite()
@@ -263,7 +230,7 @@ namespace Benchmarks.Tests
                 ar.AppendReader(new BinaryArrayReader(subSequence));
             }
 
-            BinarySerializer.DeserializeExceptionShielding<TestModelLevel4>(ar);
+            BinarySerializer.DeserializeExceptionThrowing<TestModelLevel4>(ar);
         }
         [Benchmark]
         public void Json_Deserialization_ModelLevel4()

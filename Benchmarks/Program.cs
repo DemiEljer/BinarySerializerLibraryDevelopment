@@ -17,7 +17,8 @@ namespace Benchmarks
         {
             Scenario1ModelsBenchmarks.PrintInformation();
 
-            BenchmarkRunner.Run<Scenario1ModelsBenchmarks>();
+            Scenario1ModelsBenchmarks.CustomBenchmark();
+            //BenchmarkRunner.Run<Scenario1ModelsBenchmarks>();
 
             Scenario1ModelsBenchmarks.PrintInformation();
         }
@@ -26,8 +27,8 @@ namespace Benchmarks
         {
             Scenario2ModelsBenchmarks.PrintInformation();
 
-            //Scenario2ModelsBenchmarks.CustomBenchmark();
-            BenchmarkRunner.Run<Scenario2ModelsBenchmarks>();
+            Scenario2ModelsBenchmarks.CustomBenchmark();
+            //BenchmarkRunner.Run<Scenario2ModelsBenchmarks>();
 
             Scenario2ModelsBenchmarks.PrintInformation();
         }
