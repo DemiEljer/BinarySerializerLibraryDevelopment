@@ -220,6 +220,11 @@ public class BounderyConditionsBinarySerializationInvoke
             Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<CharPropertyModel>(10));
             Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(CharPropertyModel), 10));
         }
+        // Переназначение кода типу
+        {
+            Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<CharPropertyModel>(21));
+            Assert.AreEqual(21, BinarySerializer.GetRegisteredTypesForAutoSerialization().FirstOrDefault(tp => tp.ObjectType == typeof(CharPropertyModel))?.ObjectTypeCode);
+        }
         // Регистрация двух одинаковых типов с разными кодами
         {
             Helpers.CheckExceptionHasNotThrown(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<SBytePropertyModel>(11));
