@@ -1,10 +1,12 @@
 ﻿using BinarySerializerLibrary;
+using BinarySerializerLibrary.Attributes;
 using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
 using BinarySerializerLibraryTests.CorrectModels;
 using BinarySerializerLibraryTests.Models;
 using BinarySerializerLibraryTests.TestModels;
+using Tests.TestModels;
 
 namespace BinarySerializerLibraryTests
 {
@@ -217,6 +219,24 @@ namespace BinarySerializerLibraryTests
             var serializedData = BinarySerializer.SerializeExceptionShielding(originModel);
 
             var deserializedObject = BinarySerializer.DeserializeExceptionShielding<AutoDetectPropertyModel>(serializedData);
+
+            originModel.AssetEqual(deserializedObject);
+        }
+
+        [TestMethod]
+        public void ManualRecipeCreationModel_SerializationAndDeserializationTest()
+        {
+            BinarySerializer.CreateObjectRecipeExceptionThrowing<ManualRecipeCreationModel>()
+                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field1"), new BinaryTypeIntAttribute(12))
+                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field2"))
+                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field3"), new BinaryTypeAutoAttribute())
+                .Commit();
+
+            ManualRecipeCreationModel originModel = new ManualRecipeCreationModel();
+
+            var serializedData = BinarySerializer.SerializeExceptionShielding(originModel);
+
+            var deserializedObject = BinarySerializer.DeserializeExceptionShielding<ManualRecipeCreationModel>(serializedData);
 
             originModel.AssetEqual(deserializedObject);
         }
