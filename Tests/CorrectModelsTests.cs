@@ -242,11 +242,9 @@ namespace BinarySerializerLibraryTests
 
             // Проверка корректности формирования рецепта
             {
-                var manualRecipeCreationModelRecipe = BinarySerializer.GetObjectRecipe<ManualRecipeCreationModel>();
+                var manualRecipeCreationModelDescription = BinarySerializer.GetObjectRecipe<ManualRecipeCreationModel>()?.GetDescription();
 
-                Assert.IsNotNull(manualRecipeCreationModelRecipe);
-
-                var manualRecipeCreationModelDescription = new ObjectTypeDescription(manualRecipeCreationModelRecipe);
+                Assert.IsNotNull(manualRecipeCreationModelDescription);
 
                 Assert.AreEqual(manualRecipeCreationModelDescription.TypeName, typeof(ManualRecipeCreationModel).FullName);
                 Assert.AreEqual(61, manualRecipeCreationModelDescription.TypeCode);
