@@ -227,10 +227,10 @@ namespace BinarySerializerLibraryTests
         public void ManualRecipeCreationModel_SerializationAndDeserializationTest()
         {
             BinarySerializer.CreateObjectRecipeExceptionThrowing<ManualRecipeCreationModel>()
-                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field1"), new BinaryTypeIntAttribute(12))
-                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field2"))
-                .AddProperty(typeof(ManualRecipeCreationModel).GetProperty("Field3"), new BinaryTypeAutoAttribute())
-                .Commit();
+                .AddProperty("Field1", new BinaryTypeIntAttribute(12))
+                .AddProperty("Field3", new BinaryTypeAutoAttribute())
+                .AddProperty("Field2")
+                .Commit(61);
 
             ManualRecipeCreationModel originModel = new ManualRecipeCreationModel();
 
@@ -239,6 +239,22 @@ namespace BinarySerializerLibraryTests
             var deserializedObject = BinarySerializer.DeserializeExceptionShielding<ManualRecipeCreationModel>(serializedData);
 
             originModel.AssetEqual(deserializedObject);
+
+            // Проверка корректности формирования рецепта
+            {
+                var manualRecipeCreationModelRecipe = BinarySerializer.GetObjectRecipe<ManualRecipeCreationModel>();
+
+                Assert.IsNotNull(manualRecipeCreationModelRecipe);
+
+                var manualRecipeCreationModelDescription = new ObjectTypeDescription(manualRecipeCreationModelRecipe);
+
+                Assert.AreEqual(manualRecipeCreationModelDescription.TypeName, typeof(ManualRecipeCreationModel).FullName);
+                Assert.AreEqual(61, manualRecipeCreationModelDescription.TypeCode);
+                Assert.AreEqual(61, BinarySerializer.GetRegisteredTypesForAutoSerialization().FirstOrDefault(pair => pair.ObjectType == typeof(ManualRecipeCreationModel))?.ObjectTypeCode);
+                Helpers.CheckCollectionsEquality(new string[] { "Field1", "Field3", "Field2" }, manualRecipeCreationModelDescription.PropertiesSequence);
+            }
+
+
         }
 
         [TestMethod]

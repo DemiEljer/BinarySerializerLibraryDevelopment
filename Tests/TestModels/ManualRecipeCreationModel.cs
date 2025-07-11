@@ -14,6 +14,7 @@ namespace Tests.TestModels
     {
         public int Field1 { get; set; }
 
+        [BinaryTypeString]
         public string? Field2 { get; set; }
 
         public double[]? Field3 { get; set; }
