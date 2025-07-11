@@ -41,7 +41,7 @@ public class ObjectTypeDescriptionsTests
     }
 
     [TestMethod]
-    public void RecipeChangingByDescription()
+    public void RecipeChangingByDescriptionTest()
     {
         BinarySerializer.CookObjectRecipeExceptionThrowing<DescriptionChangingModel>();
 

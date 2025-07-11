@@ -13,7 +13,7 @@ namespace BinarySerializerLibraryTests
     public class BinaryReadersTests
     {
         [TestMethod]
-        public void BinaryArrayBuilder_SingleObject()
+        public void BinaryArrayBuilder_SingleObjectTest()
         {
             BoolPropertyModel originModel = new();
 
@@ -34,7 +34,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArrayBuilder_PluralObjects()
+        public void BinaryArrayBuilder_PluralObjectsTest()
         {
             CharPropertyModel originModel1 = new();
             SBytePropertyModel originModel2 = new();
@@ -65,7 +65,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArrayBuilder_Methods()
+        public void BinaryArrayBuilder_MethodsTest()
         {
             BinaryArrayBuilder ab = new();
 
@@ -83,7 +83,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArraySlowBuilder_SingleObject()
+        public void BinaryArraySlowBuilder_SingleObjectTest()
         {
             BoolPropertyModel originModel = new();
 
@@ -104,7 +104,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArraySlowBuilder_PluralObjects()
+        public void BinaryArraySlowBuilder_PluralObjectsTest()
         {
             CharPropertyModel originModel1 = new();
             SBytePropertyModel originModel2 = new();
@@ -135,7 +135,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArraySlowBuilder_Methods()
+        public void BinaryArraySlowBuilder_MethodsTest()
         {
             BinaryArraySlowBuilder ab = new();
 
@@ -153,7 +153,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArrayFastBuilder_SingleObject()
+        public void BinaryArrayFastBuilder_SingleObjectTest()
         {
             BoolPropertyModel originModel = new();
 
@@ -174,7 +174,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArrayFastBuilder_PluralObjects()
+        public void BinaryArrayFastBuilder_PluralObjectsTest()
         {
             CharPropertyModel originModel1 = new();
             SBytePropertyModel originModel2 = new();
@@ -205,7 +205,7 @@ namespace BinarySerializerLibraryTests
         }
 
         [TestMethod]
-        public void BinaryArrayFastBuilder_Methods()
+        public void BinaryArrayFastBuilder_MethodsTest()
         {
             BinaryArrayFastBuilder ab = new();
 

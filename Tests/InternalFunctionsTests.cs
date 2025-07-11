@@ -11,7 +11,7 @@ namespace BinarySerializerLibraryTests;
 public class InternalFunctionsTests
 {
     [TestMethod]
-    public void TestCollectionSizeSerialization()
+    public void TestCollectionSizeSerializationTest()
     {
         void _TestCollectionSizeValue(int collectionSize)
         {
@@ -50,7 +50,7 @@ public class InternalFunctionsTests
     }
 
     [TestMethod]
-    public void TestTypeVerification()
+    public void TestTypeVerificationTest()
     {
         Type[] typesCollection = new Type[]
         {

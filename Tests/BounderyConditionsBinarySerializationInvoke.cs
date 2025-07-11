@@ -3,6 +3,7 @@ using BinarySerializerLibrary.BinaryDataHandlers;
 using BinarySerializerLibrary.Exceptions;
 using BinarySerializerLibraryTests.Base;
 using BinarySerializerLibraryTests.Models;
+using BinarySerializerLibraryTests.TestModels;
 using System;
 
 namespace BinarySerializerLibraryTests;
@@ -11,7 +12,7 @@ namespace BinarySerializerLibraryTests;
 public class BounderyConditionsBinarySerializationInvoke
 {
     [TestMethod]
-    public void SerializationInvokeForPluralObjects()
+    public void SerializationInvokeForPluralObjectsTest()
     {
         BinaryArrayBuilder ab = new();
 
@@ -63,7 +64,7 @@ public class BounderyConditionsBinarySerializationInvoke
     }
 
     [TestMethod]
-    public void SerializationInvokeForPluralObjectsWithNullObjects()
+    public void SerializationInvokeForPluralObjectsWithNullObjectsTest()
     {
         BinaryArrayBuilder ab = new();
 
@@ -124,7 +125,7 @@ public class BounderyConditionsBinarySerializationInvoke
     }
 
     [TestMethod]
-    public void SerializationInvokeWithNullObject()
+    public void SerializationInvokeWithNullObjectTest()
     {
         var serializedData = BinarySerializer.SerializeExceptionShielding<BoolPropertyModel>(null);
 
@@ -156,7 +157,7 @@ public class BounderyConditionsBinarySerializationInvoke
     }
 
     [TestMethod]
-    public void SerializationInvokeWithNullBuilder()
+    public void SerializationInvokeWithNullBuilderTest()
     {
 #pragma warning disable CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
         Helpers.CheckExceptionHasThrown<BinaryWriterIsNullException>((eh) => BinarySerializer.SerializeExceptionShielding<object>(null, null, eh));
@@ -179,7 +180,7 @@ public class BounderyConditionsBinarySerializationInvoke
     }
 
     [TestMethod]
-    public void DeserializationInvokeWithNullArray()
+    public void DeserializationInvokeWithNullArrayTest()
     {
         byte[]? objectContent = null;
         BoolPropertyModel? deserializedObject = null;
@@ -192,7 +193,7 @@ public class BounderyConditionsBinarySerializationInvoke
     }
 
     [TestMethod]
-    public void DeserializationInvokeWithNullReader()
+    public void DeserializationInvokeWithNullReaderTest()
     {
         BinaryArrayReader? binaryReader = null;
 
@@ -250,6 +251,10 @@ public class BounderyConditionsBinarySerializationInvoke
         // Регистрация неподходящего типа
         {
             Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing(typeof(List<int>), 15));
+        }
+        // Регистрация с отрицательным значением
+        {
+            Assert.ThrowsException<UnavailablePairOfTypeAndCodeException>(() => BinarySerializer.RegisterTypeForAutoSerializationExceptionThrowing<UIntAndIntModel>(-1));
         }
     }
 
